@@ -48,7 +48,7 @@ class User
           $resultado->bindParam(':password',$password);
           $resultado->bindParam(':avatar',$avatar);
           $resultado->execute();
-          return json_encode("New user saved");
+          return "Nuevo usuario guardado";
           $resultado=null;
           $db=null;
         }catch(PDOException $e){
@@ -74,6 +74,28 @@ class User
         }else{
             return json_encode(array("message"=>"No existe el usuario en la BD","estado"=>"false"));
         }
+        $result=null;
+        $db=null;
+    }catch(PDOException $e){
+        return '{"error":{"text":'.$e->getMessage().'}}';
+    }
+  }
+  public function UpdateAvatar()
+  {
+    $username=$this->username;
+    $id_user=$this->id_user;
+    $avatar=$this->avatar;
+    $db=new \App\Config\db;
+    $sql="UPDATE user SET
+          avatar=:avatar WHERE id_user=:id_user";
+    try{
+        $db = $db->connectDB();
+
+        $result = $db->prepare($sql);
+        $result->bindParam(':avatar',$avatar);
+        $result->bindParam(':id_user',$id_user);
+        $result->execute();
+        return "Avatar actualizado";
         $result=null;
         $db=null;
     }catch(PDOException $e){

@@ -2,6 +2,7 @@
 namespace App\Controllers;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
+use Slim\Http\UploadedFile;
 /**
  *
  */
@@ -28,9 +29,9 @@ class UserController
     $user->username=$request->getParam('username');
     $user->email=$request->getParam('email');
     $user->password=$request->getParam('password');
-    $user->avatar=$request->getParam('avatar');
+    $user->avatar="un avatar";
     $result=$user->NewUser();
-    return $result;
+    return json_decode(array("message"=>$result));
   }
   public function Login(Request $request,Response $response)
   {
@@ -63,7 +64,51 @@ class UserController
     $res=$jwt->Check($token);
     var_dump($res);
   }
+  public function Update(Request $request,Response $response)
+  {
+      $username=$request->getParam('username');
+      $id_user=$request->getParam('id_user');
+      $validar=false;
+      $nombre=$_FILES['file']['name'];
+      $guardado=$_FILES['file']['tmp_name'];
+      $dirpath= dirname(__DIR__, 2)."/"."avatar"."/".$username;
+      if (!file_exists($dirpath)) {
+      mkdir($dirpath, 0777,true);
+      chmod($dirpath, 0777);
+      if (file_exists($dirpath)) {
+          if (move_uploaded_file($guardado,$dirpath."/".$nombre)) {
+            $validar=true;
+          }else{
+            $validar=false;
+          }
+      }
+    }else{
+      if (move_uploaded_file($guardado,$dirpath."/".$nombre)) {
+          $validar=true;
+      }else{
+          $validar=false;
+      }
+    }
+    if ($validar) {
+      $path=$dirpath."/".$nombre;
+      $user = new \App\Models\User;
+      $user->username=$username;
+      $user->id_user=$id_user;
+      $user->avatar=$path;
+      $result=$user->UpdateAvatar();
+      return json_encode(array("message"=>$result));
+    }
+    else{
+      return json_encode(array("message"=>"ocurrio un error"));
+
 }
 
+  }
+  function moveUploadedFile($directory, UploadedFile $uploadedFile)
+  {
+
+  }
+
+}
 
  ?>

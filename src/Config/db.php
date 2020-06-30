@@ -4,7 +4,7 @@ use PDO;
 class db{
     private $dbHost='localhost';
     private $dbUser='admin';
-    private $dbPass='Sistemas.2020';
+    private $dbPass='password';
     private $dbName='apislim';
 
     //connection

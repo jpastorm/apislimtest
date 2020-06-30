@@ -26,7 +26,7 @@ class JwtController
         try {
           if(empty($token))
           {
-              echo '[{"message":"Invalid token supplied"}]';
+              return '[{"message":"Invalid token supplied"}]';
           }
           else{
             $decode = JWT::decode(
@@ -36,7 +36,7 @@ class JwtController
             );
           }
           if($decode->aud !== self::Aud()){
-              echo '[{"message":"Invalid user login in"}]';
+              return '[{"message":"Invalid user login in"}]';
           }
           else{
             return true;
