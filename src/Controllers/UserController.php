@@ -13,7 +13,7 @@ class UserController {
     return $response->write("Hello to " . $args['prueba'] . ", ". $request->getAttribute('UserData')->username);
   }
 
-  public function GetUsers(Request $request, Response $response) { 
+  public function GetUsers(Request $request, Response $response) {
       $user = new \App\Models\User;
       $result=$user->ListUser();
       return $result;
@@ -56,9 +56,9 @@ class UserController {
     $res=$jwt->Check($token);
     var_dump($res);
   }
-  public function Update(Request $request,Response $response) {
-      $username=$request->getParam('username');
-      $id_user=$request->getParam('id_user');
+  public function Upload(Request $request,Response $response) {
+      $username=$request->getAttribute('UserData')->username;
+      $id_user=$request->getAttribute('UserData')->id_user;
       $validar=false;
       $nombre=$_FILES['file']['name'];
       $guardado=$_FILES['file']['tmp_name'];
@@ -92,19 +92,28 @@ class UserController {
     else{
       return json_encode(array("message"=>"ocurrio un error"));
 
-}
+    }
 
   }
-  function Decrypt(Request $request,Response $response) {
+  function Decrypt(Request $request,Response $response)
+   {
     if($request->getQueryParam("token")){
       $token = $request->getQueryParam("token");
       $jwt= new JwtController();
       $res=$jwt->GetData($token);//INTRUSO
       return $response->withJson(['data' => $res]);
-      
+
     }else{
       return $response->withJson(['error' => 'Token inncorrecto, no autorizado'], 401);
-    } 
+    }
+  }
+  function SearchAvatar(Request $request,Response $response)
+  {
+    $id_user=$request->getAttribute('UserData')->id_user;
+    $user = new \App\Models\User;
+    $user->id_user=$id_user;
+    $result=$user->FindAvatar();
+    return $response->withJson(['data' => $result]);
   }
 
 }

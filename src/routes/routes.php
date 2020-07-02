@@ -5,6 +5,7 @@ $app->get('/','UserController:GetUsers');
 $app->post('/adduser','UserController:AddUser');
 $app->post('/login','UserController:Login');
 $app->post('/check','UserController:Check');
-$app->post('/update','UserController:Update');
+$app->post('/upload','UserController:Upload')->add($Middleware_Authentication);
 $app->get('/decrypt','UserController:Decrypt');
+$app->get('/search','UserController:SearchAvatar')->add($Middleware_Authentication);
  ?>
