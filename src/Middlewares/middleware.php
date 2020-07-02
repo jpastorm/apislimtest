@@ -3,7 +3,7 @@ $mwt = function ($request, $response, $next) {
     header('Access-Control-Allow-Origin: *');
     header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept,Authorization");
     header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
-    header('content-type: application/json; charset=utf-8');
+    header('Content-type: application/json; charset=utf-8');
 
     $_POST = json_decode(file_get_contents("php://input"), true);
     if (!$request->isOptions()) {
@@ -13,9 +13,6 @@ $mwt = function ($request, $response, $next) {
       $response->withStatus(200);
       return $response;
     }
-
-
-
 };
 
 $Middleware_Authentication = function($request,$response,$next){
