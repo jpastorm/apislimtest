@@ -12,8 +12,7 @@ class User
   public $password;
   public $avatar;
 
-  public function ListUser()
-  {
+  public function ListUser() {
     $db = new \App\Config\db;
     $sql="SELECT * FROM user";
     try{
@@ -31,8 +30,7 @@ class User
         return '{"error":{"text":'.$e->getMessage().'}}';
     }
   }
-  public function NewUser()
-  {
+  public function NewUser() {
       $username=$this->username;
       $email=$this->email;
       $password=$this->password;
@@ -55,8 +53,7 @@ class User
           return '{"error":{"text":'.$e->getMessage().'}}';
         }
   }
-  public function Checkuser()
-  {
+  public function Checkuser() {
     $username=$this->username;
     $password=$this->password;
     $db=new \App\Config\db;
@@ -80,8 +77,7 @@ class User
         return '{"error":{"text":'.$e->getMessage().'}}';
     }
   }
-  public function UpdateAvatar()
-  {
+  public function UpdateAvatar() {
     $username=$this->username;
     $id_user=$this->id_user;
     $avatar=$this->avatar;

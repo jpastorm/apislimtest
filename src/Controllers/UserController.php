@@ -6,25 +6,19 @@ use Slim\Http\UploadedFile;
 /**
  *
  */
-class UserController
-{
+class UserController {
 
-  public function GetUsers(Request $request, Response $response)
-  {
-    $token=$request->getAttribute('token');
-    $jwt= new JwtController();
-    $res=$jwt->Check($token);
-    if ($res) {
+  public function Prueba(Request $request, Response $response,$args) {
+    //return $response->withJson($request->getAttribute('UserData'));
+    return $response->write("Hello to " . $args['prueba'] . ", ". $request->getAttribute('UserData')->username);
+  }
+
+  public function GetUsers(Request $request, Response $response) { 
       $user = new \App\Models\User;
       $result=$user->ListUser();
       return $result;
-    }
-    else{
-      return $res;
-    }
   }
-  public function AddUser(Request $request, Response $response)
-  {
+  public function AddUser(Request $request, Response $response) {
     $user = new \App\Models\User;
     $user->username=$request->getParam('username');
     $user->email=$request->getParam('email');
@@ -33,8 +27,7 @@ class UserController
     $result=$user->NewUser();
     return json_decode(array("message"=>$result));
   }
-  public function Login(Request $request,Response $response)
-  {
+  public function Login(Request $request,Response $response) {
     $user= new \App\Models\User;
     $user->username=$request->getParam('username');
     $user->password=$request->getParam('password');
@@ -51,21 +44,19 @@ class UserController
       ];
       $jwt= new JwtController();
       $token=$jwt->SignIn($data);
-      return $token;
+      return json_encode(array("token"=>$token));
     }
     else{
       return json_encode(array("message"=>$message));
     }
   }
-  public function Check(Request $request,Response $response)
-  {
+  public function Check(Request $request,Response $response) {
     $token=$request->getParam('token');
     $jwt= new JwtController();
     $res=$jwt->Check($token);
     var_dump($res);
   }
-  public function Update(Request $request,Response $response)
-  {
+  public function Update(Request $request,Response $response) {
       $username=$request->getParam('username');
       $id_user=$request->getParam('id_user');
       $validar=false;
@@ -104,9 +95,16 @@ class UserController
 }
 
   }
-  function moveUploadedFile($directory, UploadedFile $uploadedFile)
-  {
-
+  function Decrypt(Request $request,Response $response) {
+    if($request->getQueryParam("token")){
+      $token = $request->getQueryParam("token");
+      $jwt= new JwtController();
+      $res=$jwt->GetData($token);//INTRUSO
+      return $response->withJson(['data' => $res]);
+      
+    }else{
+      return $response->withJson(['error' => 'Token inncorrecto, no autorizado'], 401);
+    } 
   }
 
 }

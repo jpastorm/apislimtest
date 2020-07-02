@@ -14,7 +14,6 @@ class JwtController
 
         $token = array(
             'exp' => $time + (60*60),
-            'aud' => self::Aud(),
             'data' => $data
         );
 
@@ -24,23 +23,16 @@ class JwtController
     public static function Check($token)
     {
         try {
-          if(empty($token))
-          {
-              return '[{"message":"Invalid token supplied"}]';
-          }
-          else{
+          if(empty($token)) {
+              return json_encode(array("message"=>"Invalid token supplied","estado"=>"false"));
+          } else{
             $decode = JWT::decode(
                 $token,
                 self::$secret_key,
                 self::$encrypt
             );
           }
-          if($decode->aud !== self::Aud()){
-              return '[{"message":"Invalid user login in"}]';
-          }
-          else{
             return true;
-          }
         } catch (\Firebase\JWT\ExpiredException $ee){
             return $ee->getMessage();
         } catch (\Firebase\JWT\DomainException $de){
