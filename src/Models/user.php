@@ -11,7 +11,7 @@ class User
   public $email;
   public $password;
   public $avatar;
-  
+
   public function ListUser() {
     $db = new \App\Config\db;
     $sql="SELECT * FROM user";
@@ -38,7 +38,7 @@ class User
     $db = new \App\Config\db;
     $sql="INSERT INTO user(username,email,password,avatar) VALUES(:username,:email,:password,:avatar)";
     try{
-      
+
       $db = $db->connectDB();
       $resultado = $db->prepare($sql);
       $resultado->bindParam(':username',$username);
@@ -60,7 +60,7 @@ class User
     $sql="SELECT id_user,username FROM user WHERE username=:username and password=:password";
     try{
       $db = $db->connectDB();
-      
+
       $result = $db->prepare($sql);
       $result->bindParam(':username',$username);
       $result->bindParam(':password',$password);
@@ -86,7 +86,7 @@ class User
     avatar=:avatar WHERE id_user=:id_user";
     try{
       $db = $db->connectDB();
-      
+
       $result = $db->prepare($sql);
       $result->bindParam(':avatar',$avatar);
       $result->bindParam(':id_user',$id_user);
@@ -100,14 +100,14 @@ class User
   }
   public function FindAvatar()
   {
-    $id_user=$this->id_user;
+    $username=$this->username;
     $db=new \App\Config\db;
-    $sql="SELECT avatar FROM user WHERE id_user=:id_user";
+    $sql="SELECT avatar FROM user WHERE username=:username";
     try{
       $db = $db->connectDB();
-      
+
       $result = $db->prepare($sql);
-      $result->bindParam(':id_user',$id_user);
+      $result->bindParam(':username',$username);
       $result->execute();
       if ($result->rowCount() > 0) {
         $avatar=$result->fetchAll(PDO::FETCH_OBJ);

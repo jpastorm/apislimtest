@@ -62,37 +62,44 @@ class UserController {
       $validar=false;
       $nombre=$_FILES['file']['name'];
       $guardado=$_FILES['file']['tmp_name'];
-      $dirpath= dirname(__DIR__, 2)."/"."avatar"."/".$username;
-      if (!file_exists($dirpath)) {
-      mkdir($dirpath, 0777,true);
-      chmod($dirpath, 0777);
-      if (file_exists($dirpath)) {
-          if (move_uploaded_file($guardado,$dirpath."/".$nombre)) {
+
+      if($_FILES["file"]["type"] == "image/png"){
+        $dirpath= dirname(__DIR__, 2)."/"."avatar"."/".$username;
+        if (!file_exists($dirpath)) {
+        mkdir($dirpath, 0777,true);
+        chmod($dirpath, 0777);
+        if (file_exists($dirpath)) {
+            if (move_uploaded_file($guardado,$dirpath."/".$nombre)) {
+              $validar=true;
+            }else{
+              $validar=false;
+            }
+        }
+      }else{
+        if (move_uploaded_file($guardado,$dirpath."/".$nombre)) {
             $validar=true;
-          }else{
+        }else{
             $validar=false;
-          }
+        }
+      }
+      if ($validar) {
+        $path=$dirpath."/".$nombre;
+        $user = new \App\Models\User;
+        $user->username=$username;
+        $user->id_user=$id_user;
+        $user->avatar=$path;
+        $result=$user->UpdateAvatar();
+        return json_encode(array("message"=>$result));
+      }
+      else{
+        return json_encode(array("message"=>"ocurrio un error"));
+
       }
     }else{
-      if (move_uploaded_file($guardado,$dirpath."/".$nombre)) {
-          $validar=true;
-      }else{
-          $validar=false;
-      }
+      return json_encode(array("message"=>"Formato incorrecto"));
     }
-    if ($validar) {
-      $path=$dirpath."/".$nombre;
-      $user = new \App\Models\User;
-      $user->username=$username;
-      $user->id_user=$id_user;
-      $user->avatar=$path;
-      $result=$user->UpdateAvatar();
-      return json_encode(array("message"=>$result));
-    }
-    else{
-      return json_encode(array("message"=>"ocurrio un error"));
 
-    }
+
 
   }
   function Decrypt(Request $request,Response $response)
@@ -109,11 +116,11 @@ class UserController {
   }
   function SearchAvatar(Request $request,Response $response)
   {
-    $id_user=$request->getAttribute('UserData')->id_user;
+
     $user = new \App\Models\User;
-    $user->id_user=$id_user;
+    $user->username=$request->getAttribute('username');
     $result=$user->FindAvatar();
-    return $response->withJson(['data' => $result]);
+    return $result;
   }
 
 }

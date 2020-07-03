@@ -21,7 +21,6 @@ $Middleware_Authentication = function($request,$response,$next){
   //ahora si, aplicaclo en tus otras rutas
 
   if($request->getQueryParam("token") || $request->getHeader("Authorization")){
-
     $token = $request->getQueryParam("token");
 
     if(count($request->getHeader("Authorization")) > 0) {

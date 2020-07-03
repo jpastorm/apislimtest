@@ -1,11 +1,11 @@
 <?php
 $app->get('/prueba/{prueba}','UserController:Prueba')->add($Middleware_Authentication);
 ////////////
-$app->get('/','UserController:GetUsers');
+$app->get('/','UserController:GetUsers')->add($Middleware_Authentication);
 $app->post('/adduser','UserController:AddUser');
 $app->post('/login','UserController:Login');
 $app->post('/check','UserController:Check');
 $app->post('/upload','UserController:Upload')->add($Middleware_Authentication);
 $app->get('/decrypt','UserController:Decrypt');
-$app->get('/search','UserController:SearchAvatar')->add($Middleware_Authentication);
+$app->get('/search/{username}','UserController:SearchAvatar');
  ?>
