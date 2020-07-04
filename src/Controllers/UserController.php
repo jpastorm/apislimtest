@@ -16,39 +16,55 @@ class UserController {
   public function GetUsers(Request $request, Response $response) {
       $user = new \App\Models\User;
       $result=$user->ListUser();
-      return $result;
+      return $response->write($result)->withStatus(200);
   }
   public function AddUser(Request $request, Response $response) {
-    $user = new \App\Models\User;
-    $user->username=$request->getParam('username');
-    $user->email=$request->getParam('email');
-    $user->password=$request->getParam('password');
-    $user->avatar="un avatar";
-    $result=$user->NewUser();
-    return json_decode(array("message"=>$result));
-  }
-  public function Login(Request $request,Response $response) {
-    $user= new \App\Models\User;
-    $user->username=$request->getParam('username');
-    $user->password=$request->getParam('password');
-    $result=$user->Checkuser();
-    $obj=json_decode($result,true);
-    $res=$obj["estado"];
-    $message=$obj["message"];
-    if ($res!="false") {
-      $id_user=$obj[0]["id_user"];
-      $username=$obj[0]["username"];
-      $data=[
-        "id_user"=>$id_user,
-        "username"=>$username
-      ];
-      $jwt= new JwtController();
-      $token=$jwt->SignIn($data);
-      return json_encode(array("token"=>$token));
+    if ($request->getParam('username') && $request->getParam('password') && $request->getParam('email')) {
+      $user = new \App\Models\User;
+      $user->username=$request->getParam('username');
+      $user->email=$request->getParam('email');
+      $user->password=$request->getParam('password');
+      $user->avatar="un avatar";
+      $result=$user->NewUser();
+      if ($result) {
+        return $response->withJson(['message' => 'Se creo correctamente el usuario'], 201);
+      }else{
+        return $response->withJson(['error' => 'Ocurrio un error'], 400);
+      }
+
     }
     else{
-      return json_encode(array("message"=>$message));
+      return $response->withJson(['error' => 'Faltan datos'], 400);
     }
+
+  }
+  public function Login(Request $request,Response $response) {
+    if ($request->getParam('username') && $request->getParam('password')) {
+      $user= new \App\Models\User;
+      $user->username=$request->getParam('username');
+      $user->password=$request->getParam('password');
+      $result=$user->Checkuser();
+      $obj=json_decode($result,true);
+      $res=$obj["estado"];
+      $message=$obj["message"];
+      if ($res!="false") {
+        $id_user=$obj[0]["id_user"];
+        $username=$obj[0]["username"];
+        $data=[
+          "id_user"=>$id_user,
+          "username"=>$username
+        ];
+        $jwt= new JwtController();
+        $token=$jwt->SignIn($data);
+        return $response->withJson(['token' => $token], 200);
+      }
+      else{
+        return $response->withJson(['error' => $message], 400);
+      }
+    } else{
+        return $response->withJson(['error' => 'Faltan datos'], 400);
+      }
+
   }
   public function Check(Request $request,Response $response) {
     $token=$request->getParam('token');
@@ -89,14 +105,13 @@ class UserController {
         $user->id_user=$id_user;
         $user->avatar=$path;
         $result=$user->UpdateAvatar();
-        return json_encode(array("message"=>$result));
+        return $response->withJson(['message' => $result], 200);
       }
       else{
-        return json_encode(array("message"=>"ocurrio un error"));
-
+        return $response->withJson(['message' => 'No se subio el archivo D:'], 400);
       }
     }else{
-      return json_encode(array("message"=>"Formato incorrecto"));
+      return $response->withJson(['error' => 'Formato incorrecto, Solo se aceptan PNG D:'], 400);
     }
 
 
@@ -114,13 +129,17 @@ class UserController {
       return $response->withJson(['error' => 'Token inncorrecto, no autorizado'], 401);
     }
   }
-  function SearchAvatar(Request $request,Response $response)
+  function SearchAvatar(Request $request,Response $response,$args)
   {
+    if (isset($args['username'])) {
+      $user = new \App\Models\User;
+      $user->username=$args['username'];
+      $response=$user->FindAvatar();
+      return $response;
+    }else{
+      return $response->withJson(['error' => 'No se especifico nada para buscar'], 404);
+    }
 
-    $user = new \App\Models\User;
-    $user->username=$request->getAttribute('username');
-    $result=$user->FindAvatar();
-    return $result;
   }
 
 }

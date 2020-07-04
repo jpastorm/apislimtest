@@ -46,7 +46,7 @@ class User
       $resultado->bindParam(':password',$password);
       $resultado->bindParam(':avatar',$avatar);
       $resultado->execute();
-      return "Nuevo usuario guardado";
+      return true;
       $resultado=null;
       $db=null;
     }catch(PDOException $e){
