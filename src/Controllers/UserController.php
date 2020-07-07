@@ -19,35 +19,48 @@ class UserController {
       return $response->write($result)->withStatus(200);
   }
   public function AddUser(Request $request, Response $response) {
-    if ($request->getParam('username') && $request->getParam('password') && $request->getParam('email')) {
-      $user = new \App\Models\User;
-      $user->username=$request->getParam('username');
-      $user->email=$request->getParam('email');
-      $user->password=$request->getParam('password');
-      $user->avatar="un avatar";
-      $result=$user->NewUser();
-      if ($result) {
-        return $response->withJson(['message' => 'Se creo correctamente el usuario'], 201);
-      }else{
-        return $response->withJson(['error' => 'Ocurrio un error'], 400);
-      }
 
+    if (!$request->getParam('username') || !$request->getParam('password') || !$request->getParam('email')) {
+    return $response->withJson(['error' => 'Datos incompletos'], 400);
     }
-    else{
-      return $response->withJson(['error' => 'Faltan datos'], 400);
+    if (strlen($request->getParam('username')) < 3) {
+      return $response->withJson(['error' => 'El campo username es invalido'], 400);
+    }
+    if (strlen($request->getParam('password')) < 3) {
+      return $response->withJson(['error' => 'El campo password es invalido'], 400);
+    }
+    if (strlen($request->getParam('email')) < 3) {
+      return $response->withJson(['error' => 'El campo email es invalido'], 400);
+    }
+
+    $user = new \App\Models\User;
+    $user->username=$request->getParam('username');
+    $user->email=$request->getParam('email');
+    $user->password=$request->getParam('password');
+    $user->avatar="un avatar";
+    $result=$user->NewUser();
+    if ($result) {
+      return $response->withJson(['message' => 'Se creo correctamente el usuario'], 201);
+    }else{
+      return $response->withJson(['error' => 'Woops!, Hubo un problema'], 500);
     }
 
   }
   public function Login(Request $request,Response $response) {
-    if ($request->getParam('username') && $request->getParam('password')) {
+    if (!$request->getParam('username') || !$request->getParam('password')) {
+        return $response->withJson(['error' => 'Datos Incompletos'], 400);
+      }
+    if (strlen($request->getParam('username')) < 3) {
+        return $response->withJson(['error' => 'El campo username es invalido'], 400);
+      }
+    if (strlen($request->getParam('password')) < 3) {
+        return $response->withJson(['error' => 'El campo password es invalido'], 400);
+      }
       $user= new \App\Models\User;
       $user->username=$request->getParam('username');
       $user->password=$request->getParam('password');
       $result=$user->Checkuser();
-      $obj=json_decode($result,true);
-      $res=$obj["estado"];
-      $message=$obj["message"];
-      if ($res!="false") {
+      if ($result) {
         $id_user=$obj[0]["id_user"];
         $username=$obj[0]["username"];
         $data=[
@@ -57,13 +70,10 @@ class UserController {
         $jwt= new JwtController();
         $token=$jwt->SignIn($data);
         return $response->withJson(['token' => $token], 200);
-      }
-      else{
-        return $response->withJson(['error' => $message], 400);
-      }
-    } else{
-        return $response->withJson(['error' => 'Faltan datos'], 400);
-      }
+      }else{
+          return $response->withJson(['error' => "No se encontro el usuario en la base de datos"], 401);
+       }
+
 
   }
   public function Check(Request $request,Response $response) {
@@ -134,8 +144,13 @@ class UserController {
     if (isset($args['username'])) {
       $user = new \App\Models\User;
       $user->username=$args['username'];
-      $response=$user->FindAvatar();
-      return $response;
+      $res=$user->FindAvatar();
+      if ($res) {
+        return $res;
+      }
+      else{
+        return $response->withJson(['error' => 'Woops, tuvimos un error'], 500);
+      }
     }else{
       return $response->withJson(['error' => 'No se especifico nada para buscar'], 404);
     }

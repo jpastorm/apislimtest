@@ -69,7 +69,7 @@ class User
         $user=$result->fetchAll(PDO::FETCH_OBJ);
         return json_encode($user);
       }else{
-        return json_encode(array("message"=>"No existe el usuario en la BD","estado"=>"false"));
+        return false;
       }
       $result=null;
       $db=null;
@@ -113,7 +113,7 @@ class User
         $avatar=$result->fetchAll(PDO::FETCH_OBJ);
         return json_encode($avatar);
       }else{
-        return json_encode(array("message"=>"No existe el usuario en la BD","estado"=>"false"));
+        return false;
       }
       $result=null;
       $db=null;
