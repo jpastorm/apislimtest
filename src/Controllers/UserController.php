@@ -115,10 +115,14 @@ class UserController {
         $user->id_user=$id_user;
         $user->avatar=$path;
         $result=$user->UpdateAvatar();
-        return $response->withJson(['message' => $result], 200);
+        if ($result) {
+          return $response->withJson(['message' => "Avatar actualizado"], 200);
+        }else{
+          return $response->withJson(['error' => 'Woops!, Hubo un problema'], 500);
+        }
       }
       else{
-        return $response->withJson(['message' => 'No se subio el archivo D:'], 400);
+        return $response->withJson(['error' => 'No se subio el archivo D:'], 400);
       }
     }else{
       return $response->withJson(['error' => 'Formato incorrecto, Solo se aceptan PNG D:'], 400);

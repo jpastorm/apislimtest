@@ -91,7 +91,7 @@ class User
       $result->bindParam(':avatar',$avatar);
       $result->bindParam(':id_user',$id_user);
       $result->execute();
-      return "Avatar actualizado";
+      return true;
       $result=null;
       $db=null;
     }catch(PDOException $e){
