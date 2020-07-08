@@ -8,6 +8,8 @@ Este es un ejemplo básico de una REST API que proporciona un REST API . Toda la
 
 ## Run the app
 
+La REST API fue probada en un servidor apache.
+
     {host}/public
 
 # REST API
