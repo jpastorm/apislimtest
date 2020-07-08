@@ -14,7 +14,7 @@ La REST API fue probada en un servidor apache.
 
 # REST API
 
-La API REST para la aplicación de ejemplo se describe a continuación.
+La API REST para la aplicación se describe a continuación.
 
 
 
