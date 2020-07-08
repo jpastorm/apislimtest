@@ -115,7 +115,7 @@ Los tokens pueden ser verificados en [jwt.io](https://jwt.io/ "JWT Homepage")
 `POST /public/adduser`
 
 ### Example Response
-`201 OK`
+`201 Created`
 
 ```javascript
 {
