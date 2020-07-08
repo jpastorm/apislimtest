@@ -9,7 +9,7 @@ $config = ['settings' => [
 ]];
 
 $app = new \Slim\App($config);
-
+define('ROUTE_PREFIX','/apislimtest');
 $container=$app->getContainer();
 
 $container['UserController']=function($container){

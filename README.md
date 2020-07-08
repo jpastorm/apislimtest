@@ -2,15 +2,25 @@
 
 Este es un ejemplo básico de una REST API que proporciona un REST API . Toda la aplicación está contenida dentro del archivo `src`.
 
-## Install
+## Dependencias
+- **[PHP-JWT](https://github.com/firebase/php-jwt "JWTPHP Github Page")** - Una biblioteca simple para codificar y decodificar JSON Web Tokens (JWT) en PHP
+- **[Slim Framework](https://github.com/slimphp/Slim "Slim Framework Github Page")**  - Slim es un micro marco PHP que lo ayuda a escribir rápidamente aplicaciones web y API simples pero potentes.
+
+
+## Instalar
 
     composer install
 
-## Run the app
+Nota: tambien podria necesitar el comando dump-autoload para actualizar la información del cargador automático de clases
+
+    composer dump-autoload
+
+
+## Correr la Api
 
 La REST API fue probada en un servidor apache.
 
-    {host}/public
+    {host}/
 
 # REST API
 
@@ -22,7 +32,7 @@ La API REST para la aplicación se describe a continuación.
 
 ### Request
 
-`GET /public/search/{username}`
+`GET /search/{username}`
 
 ### Parameters
 - **username** - Nombre de un usuario registrado
@@ -35,7 +45,7 @@ La API REST para la aplicación se describe a continuación.
 - **ErrorCode2** - No se especifico nada para buscar- `404`
 
 ### Example Request
-`GET /public/search/{username}`
+`GET /search/{username}`
 
 ### Example Response
 `200 OK`
@@ -49,7 +59,7 @@ La API REST para la aplicación se describe a continuación.
 
 ### Request
 
-`POST /public/login`
+`POST /login`
 
 ### Parameters
 - **username** - Nombre del usuario registrado
@@ -74,7 +84,7 @@ Los tokens pueden ser verificados en [jwt.io](https://jwt.io/ "JWT Homepage")
 - **ErrorCode4** - No se encontro el usuario en la base de datos- `401`
 
 ### Example Request
-`POST /public/login`
+`POST /login`
 
 ### Example Response
 `200 OK`
@@ -88,7 +98,7 @@ Los tokens pueden ser verificados en [jwt.io](https://jwt.io/ "JWT Homepage")
 
 ### Request
 
-`POST /public/adduser`
+`POST /adduser`
 
 ### Parameters
 - **username** - Nombre del usuario a registrar
@@ -112,7 +122,7 @@ Los tokens pueden ser verificados en [jwt.io](https://jwt.io/ "JWT Homepage")
 - **ErrorCode5** - Woops!, Hubo un problema- `500`
 
 ### Example Request
-`POST /public/adduser`
+`POST /adduser`
 
 ### Example Response
 `201 Created`
@@ -126,7 +136,7 @@ Los tokens pueden ser verificados en [jwt.io](https://jwt.io/ "JWT Homepage")
 
 ### Request
 
-`POST /public/upload`
+`POST /upload`
 
 ### Headers
 - **Authorization** - Identifica la sesion actual con un token
@@ -145,7 +155,7 @@ Los tokens pueden ser verificados en [jwt.io](https://jwt.io/ "JWT Homepage")
 - **ErrorCode4 ** - Invalid token supplied- `401`
 
 ### Example Request
-`POST /public/upload`
+`POST /upload`
 
 ### Example Response
 `200 OK`

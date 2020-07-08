@@ -1,11 +1,11 @@
 <?php
 $app->get('/prueba/{prueba}','UserController:Prueba')->add($Middleware_Authentication);
 ////////////
-$app->get('/','UserController:GetUsers')->add($Middleware_Authentication);
-$app->post('/adduser','UserController:AddUser');
-$app->post('/login','UserController:Login');
+$app->get(ROUTE_PREFIX.'/','UserController:GetUsers')->add($Middleware_Authentication);
+$app->post(ROUTE_PREFIX.'/adduser','UserController:AddUser');
+$app->post(ROUTE_PREFIX.'/login','UserController:Login');
 $app->post('/check','UserController:Check');
-$app->post('/upload','UserController:Upload')->add($Middleware_Authentication);
+$app->post(ROUTE_PREFIX.'/upload','UserController:Upload')->add($Middleware_Authentication);
 $app->get('/decrypt','UserController:Decrypt');
-$app->get('/search/{username}','UserController:SearchAvatar');
+$app->get(ROUTE_PREFIX.'/search/{username}','UserController:SearchAvatar');
  ?>
